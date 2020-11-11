@@ -122,4 +122,10 @@ scores = cross_val_score(clf,x_teams,y_true,scoring="accuracy")
 
 print("Accuracy: {0:.1f}%".format(np.mean(scores) * 100))
 
+from sklearn.ensemble import RandomForestClassifier
+clf=RandomForestClassifier(random_state = 14)
+scores=cross_val_score(clf,x_teams,y_true,scoring="accuracy")
+print("Using full team labels is ranked higher")
+print("Accuracy: {0:.1f}%".format(np.mean(scores) * 100))
+
 
