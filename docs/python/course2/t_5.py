@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 
-dataset_filename="./docs/python/t_data/u.data"
+dataset_filename="./docs/python/course2/t_data/u.data"
 
 all_ratings=pd.read_csv(dataset_filename,delimiter='\t',header=None,names=['UserID','MovieID','Rating','Datetime'])
 
@@ -89,7 +89,7 @@ sorted_confidence = sorted(rule_confidence.items(),key=itemgetter(1),reverse=Tru
 #     print(" - Confidence: {0:.3f}".format(rule_confidence[(premise, conclusion)]))
 #     print("")
 
-movie_name_filename = "./docs/python/t_data/u.item"
+movie_name_filename = "./docs/python/course2/t_data/u.item"
 movie_name_data = pd.read_csv(movie_name_filename,delimiter="|",header=None,encoding="mac-roman")
 movie_name_data.columns=["MovieID", "Title", "Release Date", "Video Release", "IMDB", "<UNK>", "Action", "Adventure","Animation", "Children", "Comedy", "Crime", "Documentary", "Drama", "Fantasy", "Film-Noir", "Horror", "Musical", "Mystery", "Romance", "Sci-Fi", "Thriller", "War", "Western"]
 

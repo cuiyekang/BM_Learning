@@ -2,7 +2,7 @@ import os
 import numpy as np
 import pandas as pd
 
-data_filename = "./docs/python/t_data/ad.data"
+data_filename = "./docs/python/course2/t_data/ad.data"
 
 def convert_number(x):
     try:

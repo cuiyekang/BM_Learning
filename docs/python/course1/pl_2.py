@@ -2,7 +2,7 @@
 import pandas as pd
 import numpy as np
 
-data_old =pd.read_excel("./docs/python/t_data/行业指数.xlsx",skiprows=1,skipfooter=2)
+data_old =pd.read_excel("./docs/python/course1/t_data/行业指数.xlsx",skiprows=1,skipfooter=2)
 
 data = data_old.set_index("日期")
 
@@ -12,7 +12,7 @@ data_rolling = data["全指金融"].rolling(250).mean().dropna()
 data_std = data["全指金融"].rolling(250).std().dropna()
 
 
-pe_data = pd.read_csv("./docs/python/t_data/行业指数pe_ttm.CSV",encoding="gbk",skiprows=[0,],header=1)
+pe_data = pd.read_csv("./docs/python/course1/t_data/行业指数pe_ttm.CSV",encoding="gbk",skiprows=[0,],header=1)
 
 print(pe_data.head())
 print(pe_data["全指能源"].quantile(list(np.arange(11)/10)))

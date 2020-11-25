@@ -1,7 +1,7 @@
 
 import pandas as pd
 
-data = pd.read_excel("./docs/python/t_data/神奇公式数据.xlsx",skiprows=4,sheet_name="2017")
+data = pd.read_excel("./docs/python/course1/t_data/神奇公式数据.xlsx",skiprows=4,sheet_name="2017")
 
 data = data[(data["pe_de"]>0) & (data["roic"]>0) & (data["pe_year1"]>0) & (data["pe_year2"]>0) & (data["roic_year1"]>0) & (data["roic_year2"]>0)]
 

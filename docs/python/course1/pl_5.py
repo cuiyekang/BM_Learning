@@ -11,7 +11,7 @@ pieces = []
 columns = ["name","sex","births"]
 
 for year in years:
-    path ="./docs/python/t_data/babynames/yob%d.txt"%year
+    path ="./docs/python/course1/t_data/babynames/yob%d.txt"%year
     frame = pd.read_csv(path,names=columns)
     frame["year"]=year
     pieces.append(frame)

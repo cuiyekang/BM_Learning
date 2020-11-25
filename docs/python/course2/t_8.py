@@ -16,8 +16,8 @@ c = Counter(words)
 import os
 import json
 
-input_filename = "./docs/python/t_data/python_tweets.json"
-classes_filename="./docs/python/t_data/python_classes.json"
+input_filename = "./docs/python/course2/t_data/python_tweets.json"
+classes_filename="./docs/python/course2/t_data/python_classes.json"
 
 tweets =[]
 

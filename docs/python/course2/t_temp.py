@@ -2,7 +2,7 @@ import os
 import numpy as np
 import pandas as pd
 
-data_filename = "./docs/python/t_data/matches.csv"
+data_filename = "./docs/python/course2/t_data/matches.csv"
 
 #result = pd.read_csv(data_filename,parse_dates=["Date"],skiprows=[0,])
 results = pd.read_csv(data_filename,skiprows=[0,])

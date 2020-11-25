@@ -12,7 +12,7 @@ vt = VarianceThreshold()
 xt=vt.fit_transform(x)
 
 
-adult_filename = "./docs/python/t_data/adult.data"
+adult_filename = "./docs/python/course2/t_data/adult.data"
 adult= pd.read_csv(adult_filename,
                     header=None,
                     names=["Age", "Work-Class", "fnlwgt", "Education",
