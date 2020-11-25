@@ -19,7 +19,7 @@ for index, row in results.iterrows():
 results = results.drop(index=[removeIndex])
 results.reset_index(drop=True,inplace=True)
 
-print(results.iloc[1317:1319])
+# print(results.iloc[1317:1319])
 
 
 #print(results[np.isnan(results["Visitor Team"].values)])
@@ -27,3 +27,8 @@ print(results.iloc[1317:1319])
 # results[results["Visitor Team"]!=""]
 
 # print(results.count())
+
+print(np.arange(10))
+
+for j in np.arange(10):
+    print(j)
