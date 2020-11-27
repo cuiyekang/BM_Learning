@@ -15,6 +15,7 @@ for i in range(5):  # Print the first five n-grams
 from collections import defaultdict
 
 def count_ngrams(document,n,normalise=False):
+    "将文档拆成n元词键值，词为键，数量为值"
     counts = defaultdict(float)
     for i in range(len(document) - n + 1):
         ngram=document[i:i+n]
@@ -99,18 +100,92 @@ documents=np.array(documents,dtype='object')
 
 # print(documents[0].split("\n")[:20])
 
-counts = count_ngrams(documents[0], 3, normalise=True)
-top_ngrams = sorted(counts.items(), key=itemgetter(1), reverse=True)[:30]
-ngrams, ng_counts = zip(*top_ngrams)
-x_pos = np.arange(len(ngrams))
+# counts = count_ngrams(documents[0], 3, normalise=True)
+# top_ngrams = sorted(counts.items(), key=itemgetter(1), reverse=True)[:30]
+# ngrams, ng_counts = zip(*top_ngrams)
+# x_pos = np.arange(len(ngrams))
 
-plt.figure()
-plt.bar(x_pos, ng_counts, alpha=0.4)
-plt.xticks(x_pos,ngrams,rotation=60)
-plt.xlabel('n-gram (by rank)')
-plt.ylabel('Normalised Frequency')
-plt.title('Frequency of the most common n-grams')
-plt.xlim(0, len(ngrams))
-plt.show()
+# plt.figure()
+# plt.bar(x_pos, ng_counts, alpha=0.4)
+# plt.xticks(x_pos,ngrams,rotation=60)
+# plt.xlabel('n-gram (by rank)')
+# plt.ylabel('Normalised Frequency')
+# plt.title('Frequency of the most common n-grams')
+# plt.xlim(0, len(ngrams))
+# plt.show()
+
+from sklearn.base import BaseEstimator,ClassifierMixin
+
+class SCAP(BaseEstimator,ClassifierMixin):
+    def __init__(self,n,L):
+        self.n=n
+        self.L=L
+        self.author_profiles=None #每个作者的前L个关键字
+    
+    def create_profile(self,documents):
+        #如果是单字符串，转为字符串组
+        if isinstance(documents,str):
+            documents = [documents,]
+        profiles = (count_ngrams(document,self.n,normalise=False) for document in documents)
+
+        main_profile = defaultdict(float)
+        for profile in profiles:
+            for ngram in profile:
+                main_profile[ngram] += profile[ngram]
+            
+        num_ngrams = sum(main_profile.values())
+        for ngram in main_profile:
+            main_profile[ngram] /= num_ngrams
+        
+        return self.top_L(main_profile)
+
+    def top_L(self,profile):
+        if self.L >= len(profile):
+            return profile
+
+        threshold = sorted(profile.values())[-self.L]
+        return {ngram: profile[ngram] for ngram in profile if profile[ngram] >= threshold}
+        
+    def compare_profiles(self,profile1,profile2):
+        "计算两组词相同的比例，然后计算距离，1-比例"
+        similarity = len(set(profile1.keys()) & set(profile2.keys())) / float(self.L)
+        similarity = min(similarity,1.0)
+        distance = 1 - similarity
+        return distance
+
+    def fit(self,documents,classes):
+        author_documents = ((author,[documents[i] for i in range(len(documents))
+                                    if classes[i]==author])
+                            for author in set(classes))
+        
+        self.author_profiles = {author:self.create_profile(cur_docs)
+                                for author,cur_docs in author_documents}
+
+    def predict(self,documents):
+        predictions = np.array([self.predict_single(document) for document in documents])
+        return predictions
+
+    def predict_single(self,document):
+        profile = self.create_profile(document)
+        distances = [(author,self.compare_profiles(profile,self.author_profiles[author]))
+                    for author in self.author_profiles]
+
+        prediction = sorted(distances,key=itemgetter(1))[0][0]
+
+        return prediction
+
+
+model = SCAP(n=4,L=2)
+
+# model.fit(documents,classes)
+# y_pred = model.predict(documents)
+# print(y_pred)
+# print("Accuracy is {:.1f}%".format(100. * np.mean(classes == y_pred)))
+
+#跑不出来，不知道为什么
+from sklearn import model_selection
+cv = model_selection.KFold(len(documents),n_splits=5,shuffle=True,random_state=14)
+scores =model_selection.cross_val_score(model,documents,classes,cv=cv)
+print("Accuracy is {:.1f}%".format(100. * np.mean(scores)))
 
 
