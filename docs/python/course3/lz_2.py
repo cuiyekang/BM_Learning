@@ -309,5 +309,101 @@ def transfer_score_common():
 # print(list(z))
 
 
+# def doo(a:int,b:int) ->int :
+#     """函数注释"""
+#     return a + b
 
+# print(doo.__doc__)
+# print(help(doo))
+
+
+# a = [[6, 5], [3, 7], [2, 8]]
+
+# print(help(sorted))
+
+# b = sorted(a,key = (lambda a : a[0]))
+# c = sorted(a,key = (lambda a : a[1]))
+
+# print(b)
+# print(c)
+
+# 利用python解决汉诺塔问题？
+# 有a、b、c三根柱子，在a柱子上从下往上按照大小顺序摞着64片圆盘，把圆盘从下面开始按大小顺序重新摆放在c柱子
+# 上，尝试用函数来模拟解决的过程。（提示：将问题简化为已经成功地将a柱上面的63个盘子移到了b柱）
+
+def hannuota_danshu():
+    # a的长度为单数的时候
+    a = [7,6,5,4,3,2,1]
+    b = []
+    c = []
+
+    i = 0
+    while True:
+        print("第%d次"%i)
+        i = i + 1
+        
+        if len(a)!=0 and len(b)==0 and len(c) == 0:
+            c.append(a.pop())
+        elif len(a)!=0 and len(b)==0 and len(c) != 0 and a[len(a)-1] > c[len(c)-1]:
+            b.append(a.pop())
+        elif len(a)!=0 and len(b)!=0 and len(c) != 0 and b[len(b)-1] > c[len(c)-1]:
+            b.append(c.pop())
+        elif len(a)!=0 and len(b)!=0 and len(c) == 0:
+            c.append(a.pop())
+        elif len(a)==0 and len(b)!=0 and len(c) != 0:
+            a.append(b.pop())
+        elif len(a)!=0 and len(b)!=0 and len(c) != 0 and b[len(b)-1] < c[len(c)-1] and len(b) > 1:
+            a.append(b.pop())
+        elif len(a)!=0 and len(b)!=0 and len(c) != 0 and b[len(b)-1] < c[len(c)-1]:
+            c.append(b.pop())
+        elif len(a)!=0 and len(b)==0 and len(c) != 0 and a[len(a)-1] < c[len(c)-1]:
+            c.append(a.pop())
+        elif len(a)==0 and len(b)==0 and len(c) != 0:
+            break
+        # if i == 50:
+        #     break
+        print(a,b,c)
+
+
+def hannuota_shuangshu():
+    # a的长度为双数的时候
+    a = [6,5,4,3,2,1]
+    a = list(range(1,65))
+    a.sort(reverse = True)
+    b = []
+    c = []
+    i = 0
+    while True:
+        print("第%d次"%i)
+        i = i + 1
+        
+        if len(a)!=0 and len(b)==0 and len(c) == 0:
+            b.append(a.pop())
+        elif len(a)!=0 and len(b)!=0 and len(c) == 0 and b[len(b)-1] < a[len(a)-1]:
+            c.append(a.pop())
+        elif len(a)!=0 and len(b)!=0 and len(c) != 0 and b[len(b)-1] < c[len(c)-1] and len(a) == 1:
+            c.append(a.pop())
+        elif len(a)!=0 and len(b)!=0 and len(c) != 0 and b[len(b)-1] < c[len(c)-1]:
+            c.append(b.pop())
+        elif len(a)!=0 and len(b)==0 and len(c) != 0:
+            b.append(a.pop())
+        elif len(a)!=0 and len(b)!=0 and len(c) != 0 and b[len(b)-1] > c[len(c)-1] and len(c) > 1:
+            a.append(c.pop())
+        elif len(a)!=0 and len(b)!=0 and len(c) != 0 and b[len(b)-1] > c[len(c)-1]:
+            b.append(c.pop())
+        elif len(a)!=0 and len(b)!=0 and len(c) == 0 and b[len(b)-1] > a[len(a)-1]:
+            b.append(a.pop())
+        elif len(a)==0 and len(b)!=0 and len(c) != 0 and b[len(b)-1] < c[len(c)-1] and len(b) > 1:
+            c.append(b.pop())
+        elif len(a)==0 and len(b)!=0 and len(c) != 0 and b[len(b)-1] > c[len(c)-1] and len(b) > 1:
+            a.append(b.pop())
+        elif len(a)==0 and len(b)!=0 and len(c) != 0 and b[len(b)-1] < c[len(c)-1]:
+            c.append(b.pop())       
+        elif len(a)==0 and len(b)==0 and len(c) != 0:
+            break
+        # if i == 20:
+        #     break
+        print(a,b,c)
+
+# hannuota_shuangshu()
 
