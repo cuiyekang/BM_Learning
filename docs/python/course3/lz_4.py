@@ -198,4 +198,136 @@ def test9():
     b = np.arange(-4,0).reshape(-1,2)
     print(a@b)
 
-test9()
+# test9()
+
+
+def test10():
+    M1 = np.random.rand(2,3)
+    M2 = np.random.rand(3,4)
+    res = np.empty((M1.shape[0],M2.shape[1]))
+
+    for i in range(M1.shape[0]):
+        for j in range(M2.shape[1]):
+            item = 0
+            for k in range(M1.shape[1]):
+                item += M1[i][k] * M2[k][j]
+                res[i][j] = item
+
+    res2 = M1@M2
+
+    print(M1)
+    print(M2)
+    print(res)
+    print(res2)
+    print(((res2 - res) < 1e-15).all() )
+
+# test10()
+
+def test11():
+    a = np.arange(1,10).reshape(3,3)
+    a1 = (1/a).sum(axis = 1)
+    a2 = np.array([a1,a1,a1]).T
+    b = a*a2
+    print(b)
+
+    for i in range(a.shape[0]):
+        for j in range(a.shape[1]):
+            b[i][j] = a[i][j]*sum(1/a[i])
+    
+    print(b)
+    
+
+# test11()
+
+def test12():
+    np.random.seed(0)
+    a = np.random.randint(10, 20, (8, 5))
+    a_sum_row = a.sum(axis=1)
+    a_sum_col = a.sum(axis=0)
+
+    total_sum = np.sum(a)
+    print(np.sum(a))
+    print(a_sum_row )
+    print(a_sum_col )
+
+    b = np.empty((a.shape[0],a.shape[1]))
+
+    for i in range(b.shape[0]):
+        for j in range(b.shape[1]):
+            b[i][j]=a_sum_row[i] * a_sum_col[j] /total_sum
+
+    c = a - b
+    d = np.sum(np.square(c) / c)
+
+    print(d)
+
+from time import *
+
+# test12()
+
+def test13():
+
+    begin_time =time()
+    np.random.seed(0)
+    m, n, p = 100, 80, 50
+    B = np.random.randint(0, 2, (m, p))
+    U = np.random.randint(0, 2, (p, n))
+    Z = np.random.randint(0, 2, (m, n))
+
+    U = U.T
+    a = np.zeros((1,n))
+
+    for i in range(B.shape[0]):
+        a = np.row_stack((a,((B[i] - U)**2).sum(axis=1)))
+    
+    a = a[1:,:]
+    
+    print(np.sum(a * Z))
+
+    end_time = time()
+    print(end_time - begin_time)
+    
+    
+# test13()
+
+
+def solution():
+    begin_time =time()
+    np.random.seed(0)
+    m, n, p = 100, 80, 50
+    B = np.random.randint(0, 2, (m, p))
+    U = np.random.randint(0, 2, (p, n))
+    Z = np.random.randint(0, 2, (m, n))
+
+    L_res = []
+    for i in range(m):
+        for j in range(n):
+            norm_value = ((B[i]-U[:,j])**2).sum()
+            L_res.append(norm_value*Z[i][j])
+    
+    print(sum(L_res))
+    end_time = time()
+    print(end_time - begin_time)
+
+# solution()
+
+
+
+# 输入一个整数的 Numpy 数组，返回其中递增连续整数子数组的最大长度。
+# 例如，输入 [1,2,5,6,7]，[5,6,7]为具有最大长度的递增连续整数子数组，
+# 因此输出3；输入[3,2,1,2,3,4,6]，[1,2,3,4]为具有最大长度的递增连续整数子数组，
+# 因此输出4。请充分利用 Numpy 的内置函数完成。（提示：考虑使用 nonzero, diff 函数）
+
+def test14():
+    a = [1,2,5,6,7]
+    a = [3,2,1,2,3,4,6,5]
+    b = np.diff(a)
+    b[b!=1] =0
+    s = ''.join(str(i) for i in b)
+    s = s.strip('0')
+    t = [int(i) for i in s.split('0')]
+    print(t)
+    print(len(str(np.max(t))) + 1)
+    
+
+test14()
