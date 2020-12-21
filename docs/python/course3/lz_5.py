@@ -146,4 +146,61 @@ def test3():
 
     
 
-test3()
+# test3()
+
+def test4():
+    df_sample = pd.DataFrame({"id":list("abcde"),'value':[1,2,3,4,90]})
+
+    # print(df_sample.sample(3,replace=True,weights = df_sample.value))
+
+    df =pd.read_csv("./docs/python/course3/data/learn_pandas.csv")
+
+    np.random.seed(0)
+
+    multi_index = pd.MultiIndex.from_product([list("ABCD"),df.Gender.unique()],names=("School","Gender"))
+    multi_column = pd.MultiIndex.from_product([["Heigh","Weight"],df.Grade.unique()],names=("Indicator","Grade"))
+
+    df_multi = pd.DataFrame(np.c_[(np.random.randn(8,4)*5 + 163).tolist(),
+                                (np.random.randn(8,4)*5 + 65).tolist()],
+                            index=multi_index,columns = multi_column).round(1)
+
+    # print(df_multi)
+
+    df_multi = df.set_index(["School","Grade"])
+    df_multi = df_multi.sort_index()
+
+    res1 = df_multi.loc[(['Peking University', 'Fudan University'],['Sophomore', 'Junior']), :]
+    res2 = df_multi.loc[[('Peking University', 'Junior'),('Fudan University','Sophomore')], :]
+
+    print(res1)
+    print(res2)
+
+
+
+
+# test4()
+
+def test5():
+    np.random.seed(0)
+
+    L1,L2 = ['A','B','C'],['a','b','c']
+    mul_index1 = pd.MultiIndex.from_product([L1,L2],names=('Upper', 'Lower'))
+
+    L3,L4 = ['D','E','F'],['d','e','f']
+    mul_index2 = pd.MultiIndex.from_product([L3,L4],names=('Big', 'Small'))
+
+    df_ex = pd.DataFrame(np.random.randint(-9,10,(9,9)),index = mul_index1,columns = mul_index2)
+
+    print(df_ex)
+
+    idx =pd.IndexSlice
+    print(df_ex.loc[idx['C':, ('D', 'f'):]])
+    
+    print(df_ex.loc[idx[:'A', lambda x:x.sum()>0]]) # 列和大于0
+
+    print(df_ex.loc[idx[:'A', 'b':], idx['E':, 'e':]])
+
+
+test5()
+
+
