@@ -5,6 +5,7 @@
 		}
 	],
 	"settings": {
-		"python.dataScience.jupyterServerURI": "local"
+		"python.dataScience.jupyterServerURI": "local",
+		"editor.fontSize": 18
 	}
 }
