@@ -201,6 +201,164 @@ def test5():
     print(df_ex.loc[idx[:'A', 'b':], idx['E':, 'e':]])
 
 
-test5()
+# test5()
+
+def test6():
+    np.random.seed(0)
+
+    L1,L2,L3 = ['A','B'],['a','b'],['alpha','beta']
+
+    mul_index1 = pd.MultiIndex.from_product([L1,L2,L3],names=("Upper","Lower","Extra"))
+
+    L4,L5,L6 = ['C','D'],['c','d'],['cat','dog']
+
+    mul_index2 = pd.MultiIndex.from_product([L4,L5,L6],names=("Big","Small","Other"))
+
+    df_ex = pd.DataFrame(np.random.randint(-9,10,(8,8)),index = mul_index1,columns=mul_index2)
+
+    print(df_ex)
+
+    print(df_ex.swaplevel(0,2,axis=1).head())
+    print(df_ex.reorder_levels([2,0,1],axis=0).head())
+    print(df_ex.droplevel(1,axis=1))
+    print(df_ex.droplevel([0,1],axis=0))
+
+    df_ex1 = df_ex.rename_axis(index={"Upper":"Changed_row"},columns={"Other":"Changed_col"})
+    print(df_ex1)
+    df_ex2 = df_ex.rename(columns={"cat":"not_cat"},level=2)
+    print(df_ex2)
+    df_ex3 = df_ex.rename(index=lambda x:str.upper(x),level=2)
+    print(df_ex3)
+    # df_ex3_1 = df_ex.rename_axis(index=lambda x:str.upper(x))
+    # print(df_ex3_1)
+    new_values = iter(list("abcdefgh"))
+    df_ex4 = df_ex.rename(index=lambda x:next(new_values),level=2)
+    print(df_ex4)
+
+    df_temp = df_ex.copy()
+    new_idx = df_temp.index.map(lambda x:(x[0],x[1],str.upper(x[2])))
+    # df_temp.index = new_idx
+    new_idx1 = df_temp.index.map(lambda x:(x[0] + "-"+x[1]+"-"+x[2]))
+    df_temp.index=new_idx1
+    new_idx2 = df_temp.index.map(lambda x:tuple(x.split("-")))
+    df_temp.index = new_idx2
+
+    print(df_temp)
+
+# test6()
+
+def test7():
+    df = pd.DataFrame({'A':list('aacd'),'B':list('PQRT'),'C':[1,2,3,4]})
+    print(df)
+    print(df.set_index("A"))
+    print(df.set_index("A",append=True))
+    print(df.set_index(["A","B"]))
+    my_index = pd.Series(list("WXYZ"),name="D")
+    print(df.set_index(["A",my_index]))
+    df_new = df.set_index(["A",my_index])
+    print(df_new.reset_index("D"))
+    print(df_new.reset_index("D",drop=True))
+    print(df_new.reset_index())
+    df_reindex = pd.DataFrame({"Weight":[60,70,80],"Height":[176,180,179]},index=['1001','1003','1002'])
+    df_reindex = df_reindex.reindex(index=['1001','1002','1003','1004'],columns=['Weight','Gender'])
+    print(df_reindex)
+    df_existed = pd.DataFrame(index=['1001','1002','1003','1004'],columns=['Weight','Gender'])
+    print(df_reindex.reindex_like(df_existed))
+
+# test7()
+
+def test8():
+    df_set_1 = pd.DataFrame([[0,1],[1,2],[3,4]],index = pd.Index(['a','b','a'],name='id1'))
+    df_set_2 = pd.DataFrame([[4,5],[2,6],[7,1]],index = pd.Index(['b','b','c'],name='id2'))
+
+    id1,id2 = df_set_1.index.unique(),df_set_2.index.unique()
+    # print(df_set_1)
+    # print(df_set_2)
+    print(id1.intersection(id2))
+    print(id1.union(id2))
+    print(id1.difference(id2))
+    print(id1.symmetric_difference(id2))
+
+    print(id1 & id2)
+    print(id1 | id2)
+    print((id1 ^ id2) & id1) 
+    print(id1 ^ id2)
+
+    df_set_in_col_1 = df_set_1.reset_index()
+    df_set_in_col_2 = df_set_2.reset_index()
+
+    print(df_set_in_col_1)
+    print(df_set_in_col_2)
+    print(df_set_in_col_1[df_set_in_col_1.id1.isin(df_set_in_col_2.id2)])
 
 
+
+# test8()
+
+def test9():
+    df = pd.read_csv("./docs/python/course3/data/Company.csv")
+    print(df.query('age<40 & (department == "Dairy" | department =="Bakery") & gender == "M"'))
+
+    condition_1 = df.age<40 
+    condition_2 = df.gender == "M"
+    condition_3 = df.department == "Dairy" 
+    condition_4 = df.department == "Bakery"
+    condition_5 = condition_3 | condition_4
+    conditoin_6 = condition_1 & condition_2 & condition_5
+
+    # print(df.loc[conditoin_6])
+
+    # print(df.iloc[1:-1:2,[0,2,-2]])
+
+    df_1 = df.set_index(['department','job_title','gender'])
+    df_1 = df_1.swaplevel(0,2,axis=0)
+    df_1 = df_1.rename_axis(index={'gender':'Gender'})
+    df_1.index =df_1.index.map(lambda x:(x[0] + '-' +x[1] + '-' + x[2]))
+    df_1.index = df_1.index.map(lambda x:tuple(x.split('-')))
+    df_1.index.names = ['gender','job_title','department']
+    df_1 = df_1.reset_index([0,1,2])
+
+    cols = list(df_1.columns)
+    cols.append(cols.pop(2))
+    cols.append(cols.pop(1))
+    cols.append(cols.pop(0))
+
+    df_1 = df_1[cols]
+
+    print(df_1)
+    
+
+
+# test9()
+
+
+
+# 把列索引名中的 \n 替换为空格。
+# 巧克力 Rating 评分为1至5，每0.25分一档，请选出2.75分及以下且可可含量 Cocoa Percent 高于中位数的样本。
+# 将 Review Date 和 Company Location 设为索引后，选出 Review Date 在2012年之后且 Company Location 不属于 France, Canada, Amsterdam, Belgium 的样本。
+
+def test10():
+    df = pd.read_csv("./docs/python/course3/data/chocolate.csv")
+    print(df.head())
+
+    df.columns = df.columns.map(lambda x :x.replace('\n',' '))
+
+    
+    condition_1 = df["Rating"] <=2.75
+    df["Cocoa Percent"] =df["Cocoa Percent"].apply(lambda x : float(x.replace('%','')) / 100)
+    condition_2 = df["Cocoa Percent"] > df["Cocoa Percent"].median()
+
+    # df = df[condition_1 & condition_2]
+
+    df_1 = df.set_index(['Review Date','Company Location'])
+    df_1 = df_1.sort_index()
+
+    idx = pd.IndexSlice
+
+    df_1 = df_1.loc[idx[2012:,~df_1.index.get_level_values(1).isin(['France', 'Canada', 'Amsterdam', 'Belgium']),:]]
+    print(df_1)
+
+
+
+
+test10()
