@@ -115,4 +115,29 @@ def test4():
     print(df1.compare(df2))
     print(df1.compare(df2,keep_shape=True))
 
-test4()
+# test4()
+
+def test5():
+    date = pd.date_range('20200412', '20201116').to_series()
+    date = date.dt.month.astype('string').str.zfill(2) +'-'+ date.dt.day.astype('string').str.zfill(2) +'-'+ '2020'
+    date = date.tolist()
+    print(date[:5])
+
+    df = pd.DataFrame(columns=['Date','Confirmed', 'Deaths', 'Recovered', 'Active'])
+
+    for f in date:
+        fp = "./docs/python/course3/data/us_report/"+f+".csv"
+        one = pd.read_csv(fp)
+        one = one[one['Province_State'] == 'New York'].loc[:,['Confirmed', 'Deaths', 'Recovered', 'Active']]
+        one['Date'] = f
+        df = pd.concat([df,one])
+
+    print(df.set_index('Date'))    
+
+test5()
+
+
+# 请实现带有 how 参数的 join 函数
+# 假设连接的两表无公共列
+# 调用方式为 join(df1, df2, how="left")
+# 给出测试样例
